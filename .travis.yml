@@ -6,9 +6,8 @@ matrix:
   include:
     - os: linux
       python: 2.7
-      env: PYTHON_BIN=python
+      env: PYTHON_BIN=python2
     - os: linux
-      dist: focal
       python: 3.4
     - os: linux
       dist: focal
