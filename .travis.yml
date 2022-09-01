@@ -1,11 +1,12 @@
 language: python
 
-env: PYTHON_BIN=python
+env: PYTHON_BIN=python3
 
 matrix:
   include:
     - os: linux
       python: 2.7
+      env: PYTHON_BIN=python
     - os: linux
       python: 3.4
     - os: linux
@@ -26,7 +27,6 @@ matrix:
       env: PYTHON_BIN=python2
     - os: osx
       language: generic
-      env: PYTHON_BIN=python3
 
 script:
   - $PYTHON_BIN setup.py install
