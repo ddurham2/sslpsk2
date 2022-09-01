@@ -19,7 +19,7 @@ import _ssl
 import sys
 import weakref
 
-from sslpsk2 import _sslpsk2
+from . import _sslpsk2
 
 _callbacks = {}
 

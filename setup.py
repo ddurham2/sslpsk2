@@ -41,7 +41,7 @@ try:
 
     setup(
         name='sslpsk2',
-        version='1.0.2',
+        version='1.1.0',
         description='Adds TLS-PSK support to the Python ssl package',
         author='Sidney Kuyateh',
         author_email='sidneyjohn23@kuyateh.eu',
