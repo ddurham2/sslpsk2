@@ -80,6 +80,19 @@ def _ssl_set_psk_server_callback(sock, psk_cb, hint):
     _      = _sslpsk2.sslpsk2_use_psk_identity_hint(_sslobj(sock), hint if hint else b"")
     _register_callback(sock, ssl_id, psk_cb)
 
+def _ssl_setup_psk_callbacks(sslobj):
+    psk = sslobj.context.psk
+    hint = sslobj.context.hint
+    identity = sslobj.context.identity
+    if psk:
+        if sslobj.server_side:
+            cb = psk if callable(psk) else lambda _identity: psk
+            _ssl_set_psk_server_callback(sslobj, cb, hint)
+        else:
+            cb = psk if callable(psk) else lambda _hint: psk if isinstance(psk, tuple) else (psk, identity)
+            _ssl_set_psk_client_callback(sslobj, cb)
+
+
 def wrap_socket(*args, **kwargs):
     """
     """
@@ -110,3 +123,49 @@ def wrap_socket(*args, **kwargs):
         sock.do_handshake()
 
     return sock
+
+
+class SSLContext(ssl.SSLContext):
+    @property
+    def psk(self):
+        return getattr(self, "_psk", None)
+
+    @psk.setter
+    def psk(self, psk):
+        self._psk = psk
+
+    @property
+    def hint(self):
+        return getattr(self, "_hint", None)
+
+    @hint.setter
+    def hint(self, hint):
+        self._hint = hint
+
+    @property
+    def identity(self):
+        return getattr(self, "_identity", None)
+
+    @identity.setter
+    def identity(self, identity):
+        self._identity = identity
+
+
+class SSLObject(ssl.SSLObject):
+    def do_handshake(self, *args, **kwargs):
+        if not hasattr(self, '_did_setup'):
+            _ssl_setup_psk_callbacks(self)
+            self._did_setup = True
+        super().do_handshake(*args, **kwargs)
+
+
+class SSLSocket(ssl.SSLSocket):
+    def do_handshake(self, *args, **kwargs):
+        if not hasattr(self, '_did_setup'):
+            _ssl_setup_psk_callbacks(self)
+            self._did_setup = True
+        super().do_handshake(*args, **kwargs)
+
+
+SSLContext.sslobject_class = SSLObject
+SSLContext.sslsocket_class = SSLSocket

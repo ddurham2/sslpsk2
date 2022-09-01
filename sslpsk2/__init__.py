@@ -14,4 +14,4 @@
 
 from __future__ import absolute_import
 
-from .sslpsk2 import wrap_socket
+from .sslpsk2 import wrap_socket, SSLContext, SSLSocket, SSLObject
