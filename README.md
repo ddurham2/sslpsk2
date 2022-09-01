@@ -3,13 +3,23 @@
 [![PyPI version](https://badge.fury.io/py/sslpsk2.svg)](https://badge.fury.io/py/sslpsk2)
 
 This module adds TLS-PSK support to the Python 2.7 and 3.x `ssl`
-package. Simply use
+package. 
 
-    sslpsk2.wrap_socket(sock, psk=b'...', ...)
+For synchronous sockets, simply use
+
+    sslpsk3.wrap_socket(sock, psk=b'...', ...)
 
 instead of
 
     ssl.wrap_socket(sock, ...)
+
+And for asyncio-based frameworks , simply use
+
+    sslpsk3.SSLContext(...)
+
+instead of 
+
+    ssl.SSLContext(...)
 
 ## Installation
 
@@ -20,7 +30,7 @@ development headers, and the openSSL development headers are required.  For
 Microsoft Windows, pre-built binaries are available so there are no such
 prerequisites.
 
-## Usage
+## wrap_socket Usage
 
 `sslpsk2.wrap_socket(...)` is a drop-in replacement for `ssl.wrap_socket(...)` that
 supports two additional arguments, `psk` and `hint`.
